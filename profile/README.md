@@ -41,7 +41,7 @@ graph LR
     Hardware -->|POST /api/telemetry| Java
     Java -->|GET /api/telemetry/latest| Frontend
     Java -->|POST /api/v1/analyze| Python
-    Python -.->|200 OK (JSON)| Java
+    Python -.->|"200 OK (JSON)"| Java
 ```
 
 ## 📦 Repositórios da Organização
