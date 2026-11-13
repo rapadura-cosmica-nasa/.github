@@ -21,7 +21,7 @@ O projeto segue uma arquitetura distribuída em microsserviços desacoplados, co
 
 ```mermaid
 graph LR
-    subgraph s1["1. Edge & Geração (telemetry-edge)"]
+    subgraph s1["1. Edge & Geração"]
         Hardware["Hardware<br/>(ESP32/Arduino)<br/>ou Simulador"]
     end
 
@@ -37,21 +37,22 @@ graph LR
         Python["Motor Python +<br/>Flask<br/>(Análise & Riscos)"]
     end
 
-    %% Conexões seguindo a nova arquitetura
+    %% Conexões de rede REST
     Hardware -->|POST /api/telemetry| Java
     Java -->|GET /api/telemetry/latest| Frontend
-    Java <-->|Análise / Riscos| Python
+    Java -->|POST /api/v1/analyze| Python
+    Python -.->|200 OK (JSON)| Java
 ```
 
 ## 📦 Repositórios da Organização
+
 O código-fonte está dividido por responsabilidade técnica para permitir desenvolvimento paralelo sem gargalos:
 
 | Repositório | Stack Principal | Responsabilidade |
 | :--- | :--- | :--- |
-| **astronaut-health-api** | Java, Spring Boot, H2 Database | API REST central que recebe os dados do simulador, faz a persistência do histórico clínico, motor de triagem de risco e disparo de alertas. |
-| **telemetry-analytics** *(ou telemetry-edge)* | Python, Flask | Análise de telemetria, classificação de riscos e comunicação bidirecional com a API Java. |
-| **mission-control-ui** | HTML5, CSS3 (Tailwind), JavaScript | Dashboard em tempo real para visualização de sinais vitais, níveis de alerta e protocolos de ação. |
-| **telemetry-edge-engine** | Hardware / Simulador, PySerial | Geração e envio inicial de dados biométricos físicos ou simulados. |
+| **[astronaut-health-api](https://github.com/Rapadura-Cosmica/astronaut-health-api)** | Java, Spring Boot, H2 | API REST central que recebe os dados do simulador, faz a persistência do histórico clínico e o despacho de alertas ao painel. |
+| **[telemetry-analytics](https://github.com/Rapadura-Cosmica/telemetry-analytics)** | Python, Flask, Pytest | Simulador de telemetria e Motor Clínico responsável por avaliar biometria, classificar nível de risco e gerar recomendações médicas. |
+| **[mission-control-ui](https://github.com/Rapadura-Cosmica/mission-control-ui)** | HTML5, Tailwind, JS | Dashboard em tempo real para visualização de sinais vitais, níveis de alerta e protocolos de ação da tripulação. |
 
 ## 🔌 Contrato de Integração (JSON)
 
@@ -66,30 +67,33 @@ Payload enviado pelo Hardware/Simulador com as métricas biométricas coletadas:
   "timestamp": "2026-11-14T15:30:00Z",
   "heartRate": 118,
   "spo2": 96,
-  "radiationDoseMsv": 1.4,
-  "sleepHours": 5.2
+  "radiationDoseMsv": 0.4,
+  "sleepHours": 7.2
 }
 ```
-### 2 Telemetria Classificada (Análise Python ➔ Java ➔ Dashboard)
-Payload enriquecido após o processamento de risco e geração de recomendações:
+
+### 2. Telemetria Classificada (Análise Python ➔ Java ➔ Dashboard)
+Payload enriquecido retornado pelo motor Python após o processamento de risco e geração de recomendações:
+
 ```json
 {
   "astronautId": "ASTRO-01",
   "timestamp": "2026-11-14T15:30:00Z",
   "heartRate": 118,
   "spo2": 96,
-  "radiationDoseMsv": 1.4,
-  "sleepHours": 5.2,
+  "radiationDoseMsv": 0.4,
+  "sleepHours": 7.2,
   "riskLevel": "WARNING",
   "alertMessage": "Frequência cardíaca elevada detectada. Recomenda-se hidratação e repouso."
 }
 ```
 
 ## 👨‍🚀 Equipe Rapadura Côsmica
+
 * **Core API & Persistência (Java / Spring Boot):** [Mateus Queiroz](https://github.com/tue1093) & [Grimaldo Júnior](https://github.com/grimaldojunior0413-cloud)
 * **Edge, Hardware & Análise de Anomalias (Python / Flask):** [Murilo Costa](https://github.com/MuriloDev07) & [Gabriel Guedes](https://github.com/usuario-pendente-para-colocar)
 * **Interface & Experiência do Astronauta (Front-end):** [Cauã Max](https://github.com/pl4utus)
 * **Pesquisa Científica NASA, Documentação & Pitch:** [Davi Duclerc](https://github.com/daviduclerc)
+
 ---
 Desenvolvido com energia nordestina durante o NASA International Space Apps Challenge 2026.
-
