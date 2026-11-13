@@ -20,17 +20,27 @@ Em missões espaciais profundas, a comunicação com a Terra sofre atrasos signi
 O projeto segue uma arquitetura distribuída em microsserviços desacoplados, comunicando-se via **REST / JSON**:
 
 ```mermaid
-graph TD
-    Frontend["<b>Frontend — Dashboard</b>"]
-    Java["<b>Java + Spring Boot</b><br/>API principal, histórico, alertas e banco local"]
-    Python["<b>Python + Flask</b><br/>Análise de telemetria e classificação de riscos"]
-    Hardware["<b>Hardware / Simulador</b><br/>Geração de dados biométricos"]
+graph LR
+    subgraph s1["1. Edge & Geração (telemetry-edge)"]
+        Hardware["Hardware<br/>(ESP32/Arduino)<br/>ou Simulador"]
+    end
 
-    Frontend <--> Java
-    Java <--> Python
-    Hardware -->|"Envia dados primeiro"| Java
+    subgraph s3["3. Painel da Missão (mission-control-ui)"]
+        Frontend["Dashboard<br/>Astronauta<br/>(HTML +<br/>Tailwind + JS)"]
+    end
 
-    classDef default fill:#1e1e1e,stroke:#333,stroke-width:2px,color:#fff;
+    subgraph s2["2. Core API & Persistência (astronaut-health-api)"]
+        Java["Spring Boot<br/>REST API (Porta<br/>8080)"] <-->|JPA| H2[(Banco H2)]
+    end
+
+    subgraph s4["4. Inteligência & Análise (telemetry-analytics)"]
+        Python["Motor Python +<br/>Flask<br/>(Análise & Riscos)"]
+    end
+
+    %% Conexões seguindo a nova arquitetura
+    Hardware -->|POST /api/telemetry| Java
+    Java -->|GET /api/telemetry/latest| Frontend
+    Java <-->|Análise / Riscos| Python
 ```
 
 ## 📦 Repositórios da Organização
