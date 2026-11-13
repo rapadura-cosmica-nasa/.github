@@ -48,10 +48,10 @@ O código-fonte está dividido por responsabilidade técnica para permitir desen
 
 | Repositório | Stack Principal | Responsabilidade |
 | :--- | :--- | :--- |
-| **astronaut-health-api** | Java, Spring Boot, H2 Database | API REST central que recebe os dados do simulador, faz a persistência do histórico clínico, motor de triagem de risco e disparo de alertas[cite: 3, 6]. |
-| **telemetry-analytics** *(ou telemetry-edge)* | Python, Flask | Análise de telemetria, classificação de riscos e comunicação bidirecional com a API Java[cite: 3, 6]. |
-| **mission-control-ui** | HTML5, CSS3 (Tailwind), JavaScript | Dashboard em tempo real para visualização de sinais vitais, níveis de alerta e protocolos de ação[cite: 3, 6]. |
-| **telemetry-edge-engine** | Hardware / Simulador, PySerial | Geração e envio inicial de dados biométricos físicos ou simulados[cite: 3, 6]. |
+| **astronaut-health-api** | Java, Spring Boot, H2 Database | API REST central que recebe os dados do simulador, faz a persistência do histórico clínico, motor de triagem de risco e disparo de alertas. |
+| **telemetry-analytics** *(ou telemetry-edge)* | Python, Flask | Análise de telemetria, classificação de riscos e comunicação bidirecional com a API Java. |
+| **mission-control-ui** | HTML5, CSS3 (Tailwind), JavaScript | Dashboard em tempo real para visualização de sinais vitais, níveis de alerta e protocolos de ação. |
+| **telemetry-edge-engine** | Hardware / Simulador, PySerial | Geração e envio inicial de dados biométricos físicos ou simulados. |
 
 ## 🔌 Contrato de Integração (JSON)
 Para manter todas as frentes sincronizadas, a comunicação entre o Edge Engine (Python), a Core API (Java) e o Dashboard (UI) segue o padrão:
