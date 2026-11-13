@@ -54,8 +54,24 @@ O código-fonte está dividido por responsabilidade técnica para permitir desen
 | **telemetry-edge-engine** | Hardware / Simulador, PySerial | Geração e envio inicial de dados biométricos físicos ou simulados. |
 
 ## 🔌 Contrato de Integração (JSON)
-Para manter todas as frentes sincronizadas, a comunicação entre o Edge Engine (Python), a Core API (Java) e o Dashboard (UI) segue o padrão:
 
+Para manter todas as frentes sincronizadas, a comunicação segue dois formatos ao longo do fluxo:
+
+### 1. Ingestão de Dados Brutos (Simulador ➔ Core API Java)
+Payload enviado pelo Hardware/Simulador com as métricas biométricas coletadas:
+
+```json
+{
+  "astronautId": "ASTRO-01",
+  "timestamp": "2026-11-14T15:30:00Z",
+  "heartRate": 118,
+  "spo2": 96,
+  "radiationDoseMsv": 1.4,
+  "sleepHours": 5.2
+}
+```
+### 2 Telemetria Classificada (Análise Python ➔ Java ➔ Dashboard)
+Payload enriquecido após o processamento de risco e geração de recomendações:
 ```json
 {
   "astronautId": "ASTRO-01",
