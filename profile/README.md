@@ -20,24 +20,27 @@ Em missões espaciais profundas, a comunicação com a Terra sofre atrasos signi
 O projeto segue uma arquitetura distribuída em microsserviços desacoplados, comunicando-se via **REST / JSON**:
 
 ```mermaid
-flowchart LR
-    subgraph EDGE ["1. Edge & Inteligência (telemetry-edge-engine)"]
-        direction TB
-        HW["Hardware (ESP32/Arduino) ou Simulador"] -->|Serial / Dados| PY["Motor Python + Flask"]
+graph TD
+    subgraph Frontend
+        A[Frontend — Dashboard <br/> Integrante 5]
     end
 
-    subgraph CORE ["2. Core API & Persistência (astronaut-health-api)"]
-        direction TB
-        JAVA["Spring Boot REST API (Porta 8080)"] <-->|JPA| DB[("Banco H2")]
+    subgraph Core & Persistência
+        B[Java + Spring Boot <br/> Integrantes 1, 2 e 3 <br/> API principal, histórico, alertas e banco local]
     end
 
-    subgraph UI ["3. Painel da Missão (mission-control-ui)"]
-        direction TB
-        FRONT["Dashboard Astronauta (HTML + Tailwind + JS)"]
+    subgraph Inteligência / Análise
+        C[Python + Flask <br/> Integrante 4 <br/> Análise de telemetria e classificação de riscos]
     end
 
-    PY -->|"POST /api/telemetry"| JAVA
-    FRONT <-->|"GET /api/telemetry/latest"| JAVA
+    subgraph Edge
+        D[Hardware / Simulador <br/> Integrante 6 <br/> Geração de dados biométricos]
+    end
+
+    %% Fluxo de conexões atualizado
+    A <-->|REST / JSON| B
+    B <-->|Análise e Riscos| C
+    D -->|Envia dados primeiro| B
 ```
 
 ## 📦 Repositórios da Organização
