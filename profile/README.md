@@ -21,26 +21,16 @@ O projeto segue uma arquitetura distribuída em microsserviços desacoplados, co
 
 ```mermaid
 graph TD
-    subgraph Frontend
-        A[Frontend — Dashboard <br/> Integrante 5]
-    end
+    Frontend["<b>Frontend — Dashboard</b>"]
+    Java["<b>Java + Spring Boot</b><br/>API principal, histórico, alertas e banco local"]
+    Python["<b>Python + Flask</b><br/>Análise de telemetria e classificação de riscos"]
+    Hardware["<b>Hardware / Simulador</b><br/>Geração de dados biométricos"]
 
-    subgraph Core & Persistência
-        B[Java + Spring Boot <br/> Integrantes 1, 2 e 3 <br/> API principal, histórico, alertas e banco local]
-    end
+    Frontend <--> Java
+    Java <--> Python
+    Hardware -->|"Envia dados primeiro"| Java
 
-    subgraph Inteligência / Análise
-        C[Python + Flask <br/> Integrante 4 <br/> Análise de telemetria e classificação de riscos]
-    end
-
-    subgraph Edge
-        D[Hardware / Simulador <br/> Integrante 6 <br/> Geração de dados biométricos]
-    end
-
-    %% Fluxo de conexões atualizado
-    A <-->|REST / JSON| B
-    B <-->|Análise e Riscos| C
-    D -->|Envia dados primeiro| B
+    classDef default fill:#1e1e1e,stroke:#333,stroke-width:2px,color:#fff;
 ```
 
 ## 📦 Repositórios da Organização
